@@ -5,17 +5,20 @@ import { AiFillEnvironment, AiOutlineBarChart, AiOutlineFileText, AiOutlineMail,
 import { BsAmd, BsAmazon, BsAndroid2, BsApple } from "react-icons/bs";
 
 import { RiDashboardFill } from "react-icons/ri";
+import Link from 'next/link';
+import { logoutAction } from '@/lib/action';
 
 const SidebarFrame = () => {
     const [open, setOpen] = useState(true)
     const [submenuOpen, setSubmenuOpen] = useState(false)
     const Menus = [
-        { title: "Dashboard" },
-        { title: "Pages", icon: <AiOutlineFileText /> },
-        { title: "Media", icon: <BsFillImageFill />, spacing: true },
+        { title: "Dashboard", path: "/dashboard" },
+        { title: "Pages", path: "/product", icon: <AiOutlineFileText /> },
+        { title: "Media", path: "/media", icon: <BsFillImageFill />, spacing: true },
         {
             title: "Project",
             icon: <BsReverseLayoutTextSidebarReverse />,
+            path: "/projects",
             submenu: true,
             submenuItems: [
                 { title: "Express JS", icon: <BsAndroid2 /> },
@@ -24,16 +27,16 @@ const SidebarFrame = () => {
                 { title: "CodeIgneter", icon: <BsApple /> }
             ]
         },
-        { title: "Analytics", icon: <AiOutlineBarChart /> },
-        { title: "Inbox", icon: <AiOutlineMail /> },
-        { title: "Profile", icon: <BsPerson />, spacing: true },
-        { title: "Setting", icon: <AiOutlineSetting /> },
-        { title: "Logout", icon: <AiOutlineLogout /> }
+        { title: "Analytics", path: "/analytics", icon: <AiOutlineBarChart /> },
+        { title: "Inbox", path: "/inbox", icon: <AiOutlineMail /> },
+        { title: "Profile", path: "/user", icon: <BsPerson />, spacing: true },
+        { title: "Setting", path: "/setting", icon: <AiOutlineSetting /> },
+        { title: "Logout", path: "", icon: <AiOutlineLogout /> }
     ]
     return (
-        <div className={`bg-amber-300 h-screen p-5 pt-8 ${open ? "w-72" : "w-20"} duration-500 relative`}>
+        <div className={`sticky left-0 top-0 bg-amber-300 h-screen p-5 pt-8 ${open ? "w-80" : "w-20"} duration-500 relative z-50`}>
             {/* Logo */}
-            <BsArrowLeftShort className={`text-black bg-white ${!open && "rotate-180"} duration-500 rounded-full text-3xl absolute -right-3 top-9 border cursor-pointer`} onClick={() => setOpen(!open)} />
+            <BsArrowLeftShort className={`text-black bg-white ${!open && "rotate-180"} duration-500 rounded-full text-3xl absolute z-50 -right-3 top-11 border cursor-pointer`} onClick={() => setOpen(!open)} />
             <div className='inline-flex items-center'>
                 <AiFillEnvironment className={`bg-black text-white text-4xl rounded cursor-pointer block float-left mr-2 duration-500 p-1 ${!open && "rotate-[360deg]"}`} />
                 <h1 className={`text-black origin-left font-medium text-lg duration-500 ${!open && "scale-0"}`}>Dashboard</h1>
@@ -47,40 +50,65 @@ const SidebarFrame = () => {
 
             {/* List Menu */}
             <ul className='pt-2'>
-                {
-                    Menus.map((menu, index) => (
+                {Menus.map((menu, index) => {
+                    const isLogout = menu.title.toLowerCase() === "logout";
+                    const hasSubmenu = menu.submenu && open;
+
+                    const handleClick = () => {
+                        if (isLogout) {
+                            logoutAction();
+                        } else if (hasSubmenu) {
+                            setSubmenuOpen(prev => (prev === index ? null : index)); // biar toggle per item
+                        }
+                    };
+
+                    const listItem = (
+                        <li
+                            key={index}
+                            onClick={handleClick}
+                            className={`text-zinc-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white rounded-md ${menu.spacing ? "mt-9" : "mt-2"
+                                }`}
+                        >
+                            <span className='text-2xl block float-left'>
+                                {menu.icon || <RiDashboardFill />}
+                            </span>
+                            <span className={`text-base font-medium flex-1 duration-200 ${!open && "hidden"}`}>
+                                {menu.title}
+                            </span>
+                            {hasSubmenu && (
+                                <BsChevronDown
+                                    className={`${submenuOpen === index ? "rotate-180" : ""}`}
+                                />
+                            )}
+                        </li>
+                    );
+
+                    return (
                         <React.Fragment key={index}>
-                            <li className={`text-zinc-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white rounded-md ${menu.spacing ? "mt-9" : "mt-2"}`}>
-                                <span className='text-2xl block float-left'>
-                                    {menu.icon ? menu.icon : <RiDashboardFill />}
-                                </span>
-                                <span className={`text-base font-medium flex-1 duration-200 ${!open && "hidden"}`}>{menu.title}</span>
-                                {
-                                    menu.submenu && open && (
-                                        <BsChevronDown className={`${submenuOpen && "rotate-180"}`} onClick={() => setSubmenuOpen(!submenuOpen)} />
-                                    )
-                                }
-                            </li>
-                            {
-                                menu.submenu && submenuOpen && open && (
-                                    <ul>
-                                        {
-                                            menu.submenuItems.map((subMenu, idx) => (
-                                                <li key={idx} className='text-zinc-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white rounded-md px-5'>
-                                                    <span className='text-2xl block float-left'>
-                                                        {subMenu.icon ? subMenu.icon : <RiDashboardFill />}
-                                                    </span>
-                                                    <span className={`text-base font-medium flex-1 duration-200`}>{subMenu.title}</span>
-                                                </li>
-                                            ))
-                                        }
-                                    </ul>
-                                )
-                            }
+                            {isLogout ? listItem : <Link href={menu.path || "#"}>{listItem}</Link>}
+
+                            {hasSubmenu && submenuOpen === index && (
+                                <ul>
+                                    {menu.submenuItems.map((subMenu, idx) => (
+                                        <li
+                                            key={idx}
+                                            className='text-zinc-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white rounded-md px-5'
+                                        >
+                                            <span className='text-2xl block float-left'>
+                                                {subMenu.icon || <RiDashboardFill />}
+                                            </span>
+                                            <span className='text-base font-medium flex-1 duration-200'>
+                                                {subMenu.title}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </React.Fragment>
-                    ))
-                }
+                    );
+                })}
             </ul>
+
         </div >
     )
 }

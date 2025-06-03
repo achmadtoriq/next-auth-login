@@ -3,7 +3,7 @@ import { RegisterSchema, SignInSchema } from "@/lib/zod";
 import { prisma } from "@/lib/prisma";
 import { hashSync } from "bcryptjs";
 import { redirect } from "next/navigation";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 
 export const SignUpCredentials = async (prevState, formData) => {
@@ -64,3 +64,8 @@ export const signInCredentials = async (prevData, formData) => {
     throw error;
   }
 };
+
+
+export async function logoutAction() {
+  await signOut({ redirectTo: '/login' })
+}

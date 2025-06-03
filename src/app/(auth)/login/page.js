@@ -2,14 +2,14 @@ import LoginForm from "@/components/auth/LoginForm";
 import { GithubButton, GoogleButton } from "@/components/auth/SocialButton";
 import React from "react";
 
-const LoginPage = ({ searchParams }) => {
-  const params = searchParams?.error;
+const LoginPage = async({ searchParams }) => {
+  const { error } = await searchParams;
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-2xl font-bold text-gray-900">
         Sign In to your Account
       </h1>
-      {params === 'OAuthAccountNotLinked' ? (
+      {error === 'OAuthAccountNotLinked' ? (
         <div
           className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100"
           role="alert"

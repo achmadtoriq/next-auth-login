@@ -2,7 +2,7 @@ import { getProductByUser } from "@/lib/data"
 import { formatDate } from "@/lib/utils"
 
 const ProductTable = async () => {
-    const products = await getProductByUser()
+    const products = await getProductByUser()    
     if (!products?.length) return <h1 className="text-2xl">No Product Found</h1>
     return (
         <table className="w-full bg-white mt-3">
