@@ -1,8 +1,11 @@
 import ContentFrame from "@/components/dashboard/ContentFrame";
 import SidebarFrame from "@/components/dashboard/SidebarFrame";
 import TopbarFrame from "@/components/dashboard/TopbarFrame";
+import { notFound } from "next/navigation";
 
 export default function DashboardLayout({ children }) {
+  console.log(children);
+  
   return (
     <>
       <div className="flex min-h-svh">

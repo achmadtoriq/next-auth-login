@@ -13,12 +13,13 @@ const SidebarFrame = () => {
     const [submenuOpen, setSubmenuOpen] = useState(false)
     const Menus = [
         { title: "Dashboard", path: "/dashboard" },
+        { title: "List Menu", path: "/menu" },
         { title: "Pages", path: "/product", icon: <AiOutlineFileText /> },
         { title: "Media", path: "/media", icon: <BsFillImageFill />, spacing: true },
         {
             title: "Project",
             icon: <BsReverseLayoutTextSidebarReverse />,
-            path: "/projects",
+            path: "",
             submenu: true,
             submenuItems: [
                 { title: "Express JS", icon: <BsAndroid2 /> },

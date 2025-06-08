@@ -1,5 +1,15 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient as PostgresClient } from '@prisma/client';
+import { PrismaClient as MysqlClient } from '../../prisma/generated/mysql';
 
-const prisma = new PrismaClient();
+const globalForPrisma = globalThis;
 
-export { prisma }
+export const prisma =
+  globalForPrisma.prisma ?? new PostgresClient();
+
+export const jagoanMysql =
+  globalForPrisma.jagoanMysql ?? new MysqlClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+  globalForPrisma.jagoanMysql = jagoanMysql;
+}
