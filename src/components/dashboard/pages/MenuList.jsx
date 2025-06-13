@@ -5,7 +5,6 @@ import { formatDate } from '@/lib/utils';
 
 const MenuList = async () => {
     const menus = await getMenus();
-    console.log(menus);
 
     if (!menus?.length) return <h1 className="text-2xl">No Menus Found</h1>
     return (

@@ -10,8 +10,11 @@ export const getMenus = async () => {
   }
 
   try {
-    const menus = await jagoanMysql.mitra_menus.findMany();
-    return menus;
+    // const menus = await jagoanMysql.mitra_menus.findMany();
+    // return menus;
+
+    const list_menu = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_URL}/api/menuall`); 
+    return list_menu.json();
   } catch (error) {
     console.log(error);
   }
