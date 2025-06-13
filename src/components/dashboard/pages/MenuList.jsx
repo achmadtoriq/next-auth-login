@@ -1,12 +1,40 @@
-import { getMenus } from '@/lib/data-mysql';
+'use client'
+
 import { IoCheckmarkSharp, IoCloseSharp } from "react-icons/io5";
-import React from 'react'
+import React, { useState } from 'react'
 import { formatDate } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
-const MenuList = async () => {
-    const menus = await getMenus();
+const MenuList = ({initValue}) => {
+    const [menuData, setMenuData] = useState(initValue);
 
-    if (!menus?.length) return <h1 className="text-2xl">No Menus Found</h1>
+    const handleUpdate = async (menuId, currentStatus) => {
+        
+        console.log(`Curr : ${currentStatus}`);
+        
+        const newStatus = currentStatus === true ? false : true;
+        console.log(`New : ${newStatus}`);
+        
+
+        try {
+            await fetch(`/api/menuall`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ menu_id: menuId, is_active: newStatus }),
+            });
+
+            // update state lokal agar UI berubah
+            setMenuData(prev =>
+                prev.map(menu =>
+                    menu.id === menuId ? { ...menu, is_active: newStatus } : menu
+                )
+            );
+        } catch (err) {
+            console.error("Gagal update status:", err);
+        }
+    };
+
+    if (!menuData?.length) return <h1 className="text-2xl">No Menus Found</h1>
     return (
         <>
             <table className="w-full mt-3">
@@ -23,13 +51,13 @@ const MenuList = async () => {
                 </thead>
                 <tbody>
                     {
-                        menus.map((menu, idx) => (
+                        menuData.map((menu, idx) => (
                             <tr key={menu.id}>
-                                <td className="py-3 px-6">{ ++idx }.</td>
+                                <td className="py-3 px-6">{++idx}.</td>
                                 <td className="py-3 px-6">{menu.name}</td>
                                 <td className="py-3 px-6">{menu.url}</td>
                                 <td className="py-3 px-6 text-center">{menu.order}</td>
-                                <td className="py-3 px-6">{menu.is_active ? <IoCheckmarkSharp className='mx-auto font-bold text-green-600' /> : <IoCloseSharp className='mx-auto font-bold text-green-600' />}</td>
+                                <td className="py-3 px-6">{menu.is_active ? <IoCheckmarkSharp onClick={() => handleUpdate(menu.id, menu.is_active)} className='mx-auto font-bold cursor-pointer text-green-600' /> : <IoCloseSharp onClick={() => handleUpdate(menu.id, menu.is_active)} className='mx-auto font-bold cursor-pointer text-red-600' />}</td>
                                 <td className="py-3 px-6">{formatDate(menu.created_at)}</td>
                                 <td className="py-3 px-6">{formatDate(menu.updated_at)}</td>
                             </tr>
