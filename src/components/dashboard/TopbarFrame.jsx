@@ -7,7 +7,7 @@ const TopbarFrame = async() => {
     const session = await auth()
     return (
         <>
-            <nav className="bg-gray-800 sticky top-0 shadow">
+            <nav className="bg-gray-800 sticky top-0 shadow z-10">
                 <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-14">
                     <div className="flex h-16 items-center justify-end">
                         <div className="hidden md:block">

@@ -16,8 +16,9 @@ const nextConfig = {
             },
             {
                 protocol: "https",
-                hostname: "tailwindcss.com"
-            }
+                hostname: "api.advertisingmitramedia.com"
+            },
+
         ]
     }
 };

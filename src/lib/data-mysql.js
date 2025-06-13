@@ -17,6 +17,21 @@ export const getMenus = async () => {
   }
 };
 
+export const getContentList = async () => {
+  const session = await auth();
+
+  if (!session || !session.user || !session.user.role === "admin") {
+    redirect("/dashboard");
+  }
+
+  try {
+    const list_content = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_URL}/api/content`); 
+    return list_content.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getDataTotal = async () => {
   const session = await auth();
 

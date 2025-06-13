@@ -14,30 +14,39 @@ const SidebarFrame = () => {
     const Menus = [
         { title: "Dashboard", path: "/dashboard" },
         { title: "List Menu", path: "/menu" },
-        { title: "Pages", path: "/product", icon: <AiOutlineFileText /> },
-        { title: "Media", path: "/media", icon: <BsFillImageFill />, spacing: true },
         {
-            title: "Project",
-            icon: <BsReverseLayoutTextSidebarReverse />,
+            title: "Article",
+            icon: <AiOutlineFileText />,
             path: "",
             submenu: true,
             submenuItems: [
-                { title: "Express JS", icon: <BsAndroid2 /> },
-                { title: "Next JS", icon: <BsAmazon /> },
-                { title: "Laravel", icon: <BsAmd /> },
-                { title: "CodeIgneter", icon: <BsApple /> }
+                { title: "List Content", icon: <BsAndroid2 />, path: "/artikel" },
+                { title: "Tambah Content", icon: <BsAmazon />, path: "/artikel/add" }
             ]
         },
-        { title: "Analytics", path: "/analytics", icon: <AiOutlineBarChart /> },
-        { title: "Inbox", path: "/inbox", icon: <AiOutlineMail /> },
-        { title: "Profile", path: "/user", icon: <BsPerson />, spacing: true },
-        { title: "Setting", path: "/setting", icon: <AiOutlineSetting /> },
+        // { title: "Media", path: "/media", icon: <BsFillImageFill />, spacing: true },
+        // {
+        //     title: "Project",
+        //     icon: <BsReverseLayoutTextSidebarReverse />,
+        //     path: "",
+        //     submenu: true,
+        //     submenuItems: [
+        //         { title: "Express JS", icon: <BsAndroid2 /> },
+        //         { title: "Next JS", icon: <BsAmazon /> },
+        //         { title: "Laravel", icon: <BsAmd /> },
+        //         { title: "CodeIgneter", icon: <BsApple /> }
+        //     ]
+        // },
+        // { title: "Analytics", path: "/analytics", icon: <AiOutlineBarChart /> },
+        // { title: "Inbox", path: "/inbox", icon: <AiOutlineMail /> },
+        // { title: "Profile", path: "/user", icon: <BsPerson />, spacing: true },
+        // { title: "Setting", path: "/setting", icon: <AiOutlineSetting /> },
         { title: "Logout", path: "", icon: <AiOutlineLogout /> }
     ]
     return (
         <div className={`sticky left-0 top-0 bg-amber-300 h-screen p-5 pt-8 ${open ? "w-80" : "w-20"} duration-500 relative z-50`}>
             {/* Logo */}
-            <BsArrowLeftShort className={`text-black bg-white ${!open && "rotate-180"} duration-500 rounded-full text-3xl absolute z-50 -right-3 top-11 border cursor-pointer`} onClick={() => setOpen(!open)} />
+            <BsArrowLeftShort className={`text-black bg-white ${!open && "rotate-180"} duration-500 rounded-full text-3xl absolute z-20 -right-3 top-11 border cursor-pointer`} onClick={() => setOpen(!open)} />
             <div className='inline-flex items-center'>
                 <AiFillEnvironment className={`bg-black text-white text-4xl rounded cursor-pointer block float-left mr-2 duration-500 p-1 ${!open && "rotate-[360deg]"}`} />
                 <h1 className={`text-black origin-left font-medium text-lg duration-500 ${!open && "scale-0"}`}>Dashboard</h1>
@@ -91,17 +100,19 @@ const SidebarFrame = () => {
                             {hasSubmenu && submenuOpen === index && (
                                 <ul>
                                     {menu.submenuItems.map((subMenu, idx) => (
-                                        <li
-                                            key={idx}
-                                            className='text-zinc-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white rounded-md px-5'
-                                        >
-                                            <span className='text-2xl block float-left'>
-                                                {subMenu.icon || <RiDashboardFill />}
-                                            </span>
-                                            <span className='text-base font-medium flex-1 duration-200'>
-                                                {subMenu.title}
-                                            </span>
-                                        </li>
+                                        <Link href={subMenu.path} 
+                                        key={idx}>
+                                            <li
+                                                className='text-zinc-500 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-white rounded-md px-5'
+                                            >
+                                                <span className='text-2xl block float-left'>
+                                                    {subMenu.icon || <RiDashboardFill />}
+                                                </span>
+                                                <span className='text-base font-medium flex-1 duration-200'>
+                                                    {subMenu.title}
+                                                </span>
+                                            </li>
+                                        </Link>
                                     ))}
                                 </ul>
                             )}
